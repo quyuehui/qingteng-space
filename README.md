@@ -1,4 +1,4 @@
-项目名称：qingteng-space
+![扫码_搜索联合传播样式-标准色版](https://github.com/user-attachments/assets/d5b3dfeb-1a1c-4343-a69e-bc916c58baf6)项目名称：qingteng-space
 
 📌 项目定位：青年兴趣协作生态的运行机制与轻量化价值交换模式研究
 
@@ -122,3 +122,160 @@ Fork 用于校园/社团项目原型参考
 
 🏷️ 标签（Tags）
 #青年社群 #兴趣协作 #轻技能共享 #积分系统 #校园数字化 #微信小程序生态 #去中心化社区 #非商业研究
+
+✅ 1. 可视化架构图（Mermaid 语法）
+graph TD
+    A[用户] --> B{参与方式}
+    B --> C[加入圈子]
+    B --> D[创建圈子]
+    B --> E[发布内容/服务]
+    B --> F[组织活动]
+
+    C --> G[兴趣类: 游戏/摄影/动漫]
+    C --> H[学习类: 四六级/考研/考公]
+    C --> I[校园类: 高校圈/生活互助]
+
+    D --> J[圈主自治]
+    J --> K[设置规则]
+    J --> L[管理成员]
+    J --> M[发起付费内容]
+
+    E --> N[技能输出]
+    N --> O[资料分享 → 青豆回馈]
+    N --> P[陪练指导 → 收益分成]
+    N --> Q[答疑支持 → 积分奖励]
+
+    F --> R[线上投票]
+    F --> S[线下“自在相遇局”]
+    F --> T[技能交换工作坊]
+
+    U[平台机制] --> V[青豆积分系统]
+    V --> W[10青豆 = 1元, 可提现]
+    V --> X[签到/发布/邀请获豆]
+    V --> Y[70%收益归创作者]
+
+    Z[集成服务] --> AA[查成绩]
+    Z --> AB[二手交易]
+    Z --> AC[跑腿代办]
+    Z --> AD[今日上上签]
+
+    A --> U
+    A --> Z
+
+✅ 2. 数据模型草图（Markdown 格式）
+## 🗃️ 核心数据模型（v1.0）
+
+### 1. User（用户）
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| user_id | string | 唯一标识（微信 OpenID 脱敏） |
+| nickname | string | 昵称 |
+| avatar | url | 头像链接 |
+| role | enum | 角色：member / circle_owner / admin |
+| campus | string | 所属高校（可选） |
+| skills | array | 技能标签，如 ["PPT", "摄影", "王者荣耀"] |
+| created_at | datetime | 注册时间 |
+
+---
+
+### 2. Circle（圈子）
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| circle_id | string | 圈子唯一ID |
+| name | string | 名称，如“四六级冲刺营” |
+| description | text | 简介 |
+| category | enum | 分类：学习 / 兴趣 / 校园 / 技能 |
+| owner_id | string | 圈主 user_id |
+| members_count | int | 成员数量 |
+| is_paid | boolean | 是否为付费圈子 |
+| fee_amount | int | 加入费用（青豆） |
+| created_at | datetime | 创建时间 |
+
+---
+
+### 3. Contribution（贡献记录）
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| contrib_id | string | 贡献ID |
+| user_id | string | 贡献者 |
+| circle_id | string | 所属圈子 |
+| type | enum | 类型：post / service / event / answer |
+| content_summary | text | 内容摘要 |
+| reward_qd | int | 获得青豆数 |
+| status | enum | 状态：pending / confirmed / paid |
+| timestamp | datetime | 时间戳 |
+
+---
+
+### 4. QingDou（青豆账户）
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| user_id | string | 用户ID |
+| balance | int | 当前余额（青豆） |
+| total_earned | int | 累计获得 |
+| total_withdrawn | int | 已提现（换算为元） |
+| last_withdraw_time | datetime | 最后提现时间 |
+| withdrawal_records | array | 提现历史 |
+
+---
+
+### 5. Event（活动）
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| event_id | string | 活动ID |
+| title | string | 标题，如“重庆周末露营局” |
+| circle_id | string | 所属圈子 |
+| organizer_id | string | 组织者 user_id |
+| type | enum | 类型：online / offline / hybrid |
+| location | string | 地点（线下必填） |
+| max_participants | int | 最大人数 |
+| status | enum | 状态：planning / confirmed / completed |
+| created_at | datetime | 创建时间 |
+
+📌 说明：该模型为观察推导版，非真实数据库结构，可用于原型设计、API 接口定义参考。
+
+✅ 3. 可复用的圈子运营模板（Markdown 格式）
+适用于任何组织者快速创建一个标准化、可持续运营的兴趣/技能圈子。
+# 🌱 【圈子运营模板】v1.0
+
+> 适用于：学习互助、技能分享、兴趣社交类圈子  
+> 使用方式：复制此模板，替换括号内容即可发布
+
+---
+
+## 🏷️ 圈子名称
+【Python入门互助组】
+
+## 📌 创建初衷
+帮助零基础同学系统学习 Python，避免“收藏=学会”的陷阱，通过共学、答疑、小项目实践，真正把知识用起来。
+
+## 👥 目标人群
+- 想转行但不知从何开始
+- 学了一点但缺乏练习场景
+- 希望找到学习搭子互相督促
+
+## 🧩 运营形式
+| 形式 | 频率 | 说明 |
+|------|------|------|
+| 每周共学打卡 | 每周1次 | 发布学习进度，互相点评 |
+| 入门资料包共享 | 持续更新 | 整理免费教程、工具链 |
+| 小项目协作 | 每月1次 | 如“自动整理文件夹脚本” |
+| 问答答疑池 | 每日开放 | 提问→解答→归档 |
+
+## 💬 加入规则
+1. 实名制（昵称+背景，如“小王-大三-经管”）
+2. 每月至少参与1次互动
+3. 禁止广告、刷屏、人身攻击
+
+## 🎁 加入福利
+- 免费领取《Python自学路径图》PDF
+- 优先参与线下编程茶话会
+- 表现积极者可获“青豆”支持（用于兑换资料或服务）
+
+## 📞 如何加入？
+微信搜索「青藤时光部落」小程序 → 搜索圈子名称 → 申请加入
+
+---
+
+📌 维护人：@代码写诗  
+📅 更新时间：2025年8月21日
